@@ -3,15 +3,10 @@ import { usePaginationContext } from '../contexts/PaginationContext'
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import { Link } from 'react-router-dom';
 import { useSelector } from "react-redux";
-import { Drawer } from '@mui/material';
 import { Menu, MenuItem } from '@mui/material';
 
-
-
-
-
 function Categories(props) {
-  const { categories, setCurrCategory, searchFunction } = props;
+  const { categories, setCurrCategory, searchFunction = ()=> {} } = props;
   const { setPageNum } = usePaginationContext();
   const quantity  = useSelector((store) => { return store.cartReducer.cartQuantity })
   const [open, setOpen] = React.useState(false);
@@ -31,7 +26,8 @@ function Categories(props) {
   return (
     <>
       <button className="menu-container"
-        onClick={handleMenuOpen}>Select categories</button>
+        onClick={handleMenuOpen}>Select categories
+      </button>
       <Menu
         open={open}
         onClose={handleMenuClose}
@@ -43,6 +39,7 @@ function Categories(props) {
         }}>
         All categories
         </MenuItem>
+
         {categories?.map((category, index) => (
           <MenuItem key={index} onClick={() => {
             setCurrCategory(category);
@@ -51,9 +48,10 @@ function Categories(props) {
             {category}
           </MenuItem>
         ))}
-        
       </Menu>
+
       {searchFunction()}
+
       <div className='checkout_cart_link'>
         <Link to="/cart">
           <div className="cart_container">
@@ -63,6 +61,7 @@ function Categories(props) {
           </div>
         </Link>
       </div>
+
     </>
   );
 }

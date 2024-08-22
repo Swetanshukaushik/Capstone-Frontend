@@ -50,7 +50,7 @@ function Cart() {
         <h2 className="cart-summary-title">Cart Summary</h2>
         <p className="cart-summary-contents">Total Contents: {totalContents}</p>
         <p className="cart-summary-amount">Total Amount: ${totalAmount}</p>
-        <button className="cart-proceed-button  right-align" onClick={() => console.log("Proceed to payment")}>Proceed to Payment</button>
+        <button className="cart-proceed-button  right-align" onClick={() => handleProceedToPayment()}>Proceed to Payment</button>
       </div>
     </div>
   );

@@ -61,7 +61,7 @@ function Home() {
           }} />
         <div className="icons_container">
           <ArrowCircleUpIcon
-            style={{ color: "grey" }}
+            style={{ color: "aliceblue" }}
             fontSize="large"
             onClick={() => {
               setsortDir(1)
@@ -70,7 +70,7 @@ function Home() {
           ></ArrowCircleUpIcon>
           <ArrowCircleDownIcon
             fontSize="large"
-            style={{ color: "grey" }}
+            style={{ color: "aliceblue" }}
             onClick={() => {
               setsortDir(-1)
               setPageNum(1)
@@ -93,7 +93,7 @@ function Home() {
 
       {/* main area  */}
       <main className="product_wrapper">
-        <ProductList productList={filteredSortedgroupByArr}> ̰</ProductList>
+        <ProductList productList={filteredSortedgroupByArr}></ProductList>
       </main>
       <div className="pagination">
         <button
