@@ -18,11 +18,11 @@ const cartSlice = createSlice({
                 .find((cProduct) => { return cProduct.id == productToBeAdded.id });
             if (requiredProduct == undefined) {
                 //quanityt
-                productToBeAdded.indQuantity = 1
+                productToBeAdded.incQuantity = 1
                 state.cartProducts.push(productToBeAdded)
             } else {
                 // already present
-                requiredProduct.indQuantity++;
+                requiredProduct.incQuantity++;
             }
         },
 
@@ -36,10 +36,10 @@ const cartSlice = createSlice({
             } else {
                 
                 let product = state.cartProducts[productIdx];
-                if (product.indQuantity == 0) {
+                if (product.incQuantity == 0) {
                     state.cartProducts.splice(productIdx, 0);
                 } else {
-                    state.cartProducts[productIdx].indQuantity--;
+                    state.cartProducts[productIdx].incQuantity--;
                     state.cartQuantity--;
                 }
             }

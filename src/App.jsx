@@ -13,6 +13,7 @@ import RequireAuth from './components/RequireAuth'
 import ProductDetails from './pages/ProductDetails';
 import Cart from "./pages/Cart";
 import User from './pages/User';
+import WebsocketShowcase from './pages/WebsocketsShowcase/websocketShowcase';
 
 
 // function loadScript() {
@@ -68,11 +69,11 @@ import User from './pages/User';
 
 function App() {
   return (
-    //FOR RAZOR INTEGRATION
-    // <>
-    //   <div>
-    //     <img src={viteLogo} className="logo" alt="Vite logo" />
-    //     <img src={reactLogo} className="logo react" alt="React logo" />
+  //FOR RAZOR INTEGRATION
+  // <>
+  //   <div>
+  //     <img src={viteLogo} className="logo" alt="Vite logo" />
+  //     <img src={reactLogo} className="logo react" alt="React logo" />
 
     //   </div>
     //   <h1>Payment Demo</h1>
@@ -95,6 +96,10 @@ function App() {
         <Route path="/signup" element={<Signup></Signup>}></Route>
         <Route path="/login" element={<Login></Login>}></Route>
         <Route path="/home" element={<Navigate to="/"></Navigate>}></Route>
+        <Route path="/websocketShowcase"element = {<WebsocketShowcase></WebsocketShowcase>}></Route>
+        {/* <Route path="/readMe"element = {<Readme></Readme>}></Route> */}
+
+
         <Route path="*" element={<PageNotFound></PageNotFound>}> </Route>
       </Routes>
     </PaginationProvider>

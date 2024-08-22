@@ -1,12 +1,13 @@
 //to declare all urls in the project at one place
 
-// const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:3001";
+export const localhost= "http://localhost:3000";
 
-const BASE_URL = "http://localhost:3000" || "http://localhost:3001";
+export const BASE_URL = "https://capstone-backend-orcg.onrender.com" || localhost;
 const urlConfig = {
-    LOGIN_URL : BASE_URL + "/api/userManagement/login",
-    SIGNUP_URL : BASE_URL + "/api/userManagement/signup",
-    ALL_PRODUCT_URL : BASE_URL + "/api/product"
+  LOGIN_URL : BASE_URL + "/api/auth/login",
+  SIGNUP_URL : BASE_URL + "/api/auth/signup",
+  ALL_PRODUCT_URL : BASE_URL + "/api/product",
+  PRODUCT_CATEGORIES_URL : BASE_URL + "/api/product/categories"
 }
 
 export default urlConfig;

@@ -9,146 +9,124 @@ import basicOps from '../utility/basicOps';
 import { usePaginationContext } from '../contexts/PaginationContext';
 import axios from "axios";
 import urlConfig from '../../urlConfig';
+
 function Home() {
-    // preserver -> pagination
-    /***single source of truth for all the products***/
-    const [products, setProducts] = useState([]);
-    /************ all the categories -> a product**********/
-    const [categories, setCategories] = useState([]);
-    /**********Action***********/
-    /*********************** state ->term with which you want to filter the product list*****************************/
-    const [searchTerm, setSearchTerm] = useState("");
-    /**************************sort : 0 : unsorted , 1: incresing order , -1 : decreasing order ************************************/
-    const [sortDir, setsortDir] = useState(0);
-    /**************************** currcategory : category group you result **********************************/
-    const [currCategory, setCurrCategory] = useState("All categories");
-    // page num and page size
-    const { pageSize, pageNum,
-        setPageNum,
-        setPageSize } = usePaginationContext();
-    /****************get all the products*********************/
-    useEffect(() => {
-        (async function () {
-            // const resp = await fetch(`https://fakestoreapi.com/products`)
-            // // console.log(resp)
+  const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [sortDir, setsortDir] = useState(0);
+  const [currCategory, setCurrCategory] = useState("All categories");
+  const { pageSize, pageNum, setPageNum, setPageSize } = usePaginationContext();
 
-            // const productData = await resp.json();
-            // setProducts(productData);
+  /****************get all the products*********************/
+  useEffect(() => {
+    (async function () {
+      // const resp = await fetch(`https://fakestoreapi.com/products`);
+      const resp = await axios.get(urlConfig.ALL_PRODUCT_URL);
+      const productArr = resp.data.message;
+      const productMappedArr = productArr.map((product) => {
+        return {
+          ...product,
+          id: product["_id"] || product.id,
+          images: product.productImages ||[product.image],
+          title: product.name || product.title
+        }
+      })
+      setProducts(productMappedArr);
+    })()
+  }, [])
 
-            // i will be using axios
-        //   const resp = await axios.get(`https://fakestoreapi.com/products`);
-          const resp = await axios.get(urlConfig.ALL_PRODUCT_URL);
-            // req.data
-            const productArr = resp.data.message;
-            console.log(productArr);
-            const productMappedArr = productArr.map((product) => {
-                return {
-                    ...product,
-                    id: product["_id"] || product.id,
-                    images: product.productImages ||[product.image],
-                    title: product.name || product.title
-                }
-            })
-            setProducts(productMappedArr);
-        })()
-    }, [])
+  /**************getting all the categroies ********************/
+  useEffect(() => {
+    (async function () {
+      const resp = await fetch(urlConfig.PRODUCT_CATEGORIES_URL);
+      const categoriesData = await resp.json();
+      setCategories(categoriesData.data);
+    })()
+  }, [])
+  const object = basicOps(products, searchTerm, sortDir, currCategory, pageNum, pageSize);
+  const filteredSortedgroupByArr = object.filteredSortedgroupByArr;
+  const totalPages = object.totalPages;
+  const searchFn = function(){
+    return (<>
+      <div className="search_sortWrapper">
+        <input
+          className='search_input'
+          type="text"
+          placeholder='Search Products ...'
+          value={searchTerm}
+          onChange={(e) => {
+            setSearchTerm(e.target.value)
+            setPageNum(1);
+          }} />
+        <div className="icons_container">
+          <ArrowCircleUpIcon
+            style={{ color: "grey" }}
+            fontSize="large"
+            onClick={() => {
+              setsortDir(1)
+              setPageNum(1)
+            }}
+          ></ArrowCircleUpIcon>
+          <ArrowCircleDownIcon
+            fontSize="large"
+            style={{ color: "grey" }}
+            onClick={() => {
+              setsortDir(-1)
+              setPageNum(1)
+            }}
+          ></ArrowCircleDownIcon>
+        </div>
+      </div>
+    </>);
+  }
+  return (
+    <>
+      <header className="nav_wrapper">
+        <div className="categories_wrapper">
+          <Categories categories={categories}
+            setCurrCategory={setCurrCategory}
+            searchFunction = {searchFn}
+          ></Categories>
+        </div>
+      </header>
 
-    /**************getting all the categroies ********************/
-    // useEffect(() => {
-    //     (async function () {
-    //         const resp = await fetch(`https://fakestoreapi.com/products/categories`)
-    //         const categoriesData = await resp.json();
-    //         setCategories(categoriesData);
-    //     })()
-    // }, [])
-    const object = basicOps(products, searchTerm, sortDir, currCategory, pageNum, pageSize);
-    const filteredSortedgroupByArr = object.filteredSortedgroupByArr;
-    const totalPages = object.totalPages;
-    return (
-        <>
-            {/* header */}
-            <header className="nav_wrapper">
-                <div className="search_sortWrapper">
-                    <input
-                        className='search_input'
-                        type="text"
-                        value={searchTerm}
-                        onChange={(e) => {
-                            setSearchTerm(e.target.value)
-                            setPageNum(1);
-                        }} />
-                    <div className="icons_container">
-                        <ArrowCircleUpIcon
-                            style={{ color: "white" }}
-                            fontSize="large"
-                            onClick={() => {
-                                setsortDir(1)
-                                setPageNum(1)
-                            }}
-                        ></ArrowCircleUpIcon>
-                        <ArrowCircleDownIcon
-                            fontSize="large"
-                            style={{ color: "white" }}
-                            onClick={() => {
-                                setsortDir(-1)
-                                setPageNum(1)
-                            }}
-                        ></ArrowCircleDownIcon>
-                    </div>
-                </div>
+      {/* main area  */}
+      <main className="product_wrapper">
+        <ProductList productList={filteredSortedgroupByArr}> ̰</ProductList>
+      </main>
+      <div className="pagination">
+        <button
+          onClick={() => {
+            if (pageNum == 1)
+              return
+            setPageNum((pageNum) => pageNum - 1)
+          }}
 
-                {/* <div className="categories_wrapper">
-                    <Categories categories={categories}
-                        setCurrCategory={setCurrCategory}
-
-                    ></Categories>
-                </div> */}
-
-            </header>
-
-            {/* main area  */}
-            <main className="product_wrapper">
-                {/* products will be there */}
-                <ProductList productList={filteredSortedgroupByArr}> ̰</ProductList>
-            </main>
-            {/* pagination */}
-            <div className="pagination">
-                <button
-                    onClick={() => {
-                        if (pageNum == 1)
-                            return
-                        setPageNum((pageNum) => pageNum - 1)
-                    }}
-
-                    disabled={pageNum == 1 ? true : false}
-                >
-                    <KeyboardArrowLeftIcon fontSize='large'></KeyboardArrowLeftIcon>
-                </button>
-                <div className="pagenum">
-                    {pageNum}
-                </div>
-                <button
-                    onClick={() => {
-                        if (pageNum == totalPages)
-                            return
-                        setPageNum((pageNum) => pageNum + 1)
-                    }}
-                    disabled={pageNum == totalPages ? true : false}
-
-
-                >
-                    <ChevronRightIcon fontSize='large'
-
-                    ></ChevronRightIcon>
-                </button>
-            </div>
-        </>
-
-    )
+          disabled={pageNum == 1 ? true : false}
+        >
+          <KeyboardArrowLeftIcon fontSize='large'></KeyboardArrowLeftIcon>
+        </button>
+        <div className="pagenum">
+          {pageNum}
+        </div>
+        <button
+          onClick={() => {
+            if (pageNum == totalPages)
+              return
+            setPageNum((pageNum) => pageNum + 1)
+          }}
+          disabled={pageNum == totalPages ? true : false}
+        >
+          <ChevronRightIcon fontSize='large'
+          ></ChevronRightIcon>
+        </button>
+      </div>
+    </>
+  )
 }
 
 export default Home;
-
 
 /***
  * 1. Steps/ 
@@ -158,11 +136,5 @@ export default Home;
  *  c. Categorization
  *  d. Pagination
  *  e. Render the Results
- * 
- * 2. Data 
- *      1. Products
- *      2. Categories
- * 
- * 
  * **/
 
